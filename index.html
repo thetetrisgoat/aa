@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeJournal — Smart Developer Journal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#f5f7fb; --surface:#fff; --surface2:#eef1f7; --text:#172033;
+      --muted:#6c7485; --border:rgba(20,30,50,.09); --primary:#6c63ff;
+      --primary-dark:#554ce6; --shadow:0 15px 45px rgba(32,38,65,.08); --radius:22px;
+    }
+    body.dark {
+      --bg:#0d1117; --surface:#151b24; --surface2:#1d2632; --text:#f1f5f9;
+      --muted:#9ba7b8; --border:rgba(255,255,255,.08); --shadow:0 20px 50px rgba(0,0,0,.3);
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,sans-serif;transition:.3s}
+    a{text-decoration:none}.navbar{background:rgba(255,255,255,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+    body.dark .navbar{background:rgba(13,17,23,.82)}
+    .brand{font-weight:800;color:var(--text)} .brand i{color:var(--primary)}
+    .nav-link{color:var(--muted);font-weight:500}.nav-link:hover{color:var(--primary)}
+    .hero{padding:115px 0 75px;position:relative;overflow:hidden}
+    .hero:before,.hero:after{content:"";position:absolute;border-radius:50%;pointer-events:none;filter:blur(90px)}
+    .hero:before{width:450px;height:450px;background:rgba(108,99,255,.14);top:-150px;left:-120px}
+    .hero:after{width:350px;height:350px;background:rgba(0,184,148,.10);right:-100px;bottom:-100px}
+    .hero-title{font-size:clamp(2.6rem,6vw,5.2rem);line-height:1.02;font-weight:800;letter-spacing:-3px}
+    .gradient-text{background:linear-gradient(100deg,#6c63ff,#9b59ff,#00b894);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-description{color:var(--muted);font-size:1.1rem;max-width:650px;line-height:1.8}
+    .btn-primary-custom{background:var(--primary);border:0;color:#fff;padding:13px 22px;border-radius:13px;font-weight:600;transition:.2s;box-shadow:0 8px 20px rgba(108,99,255,.2)}
+    .btn-primary-custom:hover{background:var(--primary-dark);color:#fff;transform:translateY(-2px)}
+    .btn-soft{background:var(--surface);color:var(--text);border:1px solid var(--border);padding:13px 22px;border-radius:13px;font-weight:600;transition:.2s}
+    .btn-soft:hover{transform:translateY(-2px);color:var(--primary);border-color:rgba(108,99,255,.3)}
+    .glass-card{background:rgba(255,255,255,.65);backdrop-filter:blur(20px);border:1px solid var(--border);box-shadow:var(--shadow);border-radius:var(--radius)}
+    body.dark .glass-card{background:rgba(21,27,36,.72)}
+    .stats-card{padding:25px;height:100%}.stat-number{font-size:2rem;font-weight:800}.stat-label{color:var(--muted);font-size:.9rem}
+    .section{padding:80px 0}.section-title{font-size:2.3rem;font-weight:800;letter-spacing:-1px}.section-subtitle{color:var(--muted)}
+    .journal-card{padding:30px;height:100%}
+    .journal-input,.journal-textarea,.search-input{background:var(--surface2);border:1px solid transparent;color:var(--text);border-radius:14px;padding:14px 16px}
+    .journal-input:focus,.journal-textarea:focus,.search-input:focus{background:var(--surface);color:var(--text);border-color:var(--primary);box-shadow:0 0 0 4px rgba(108,99,255,.1)}
+    .journal-textarea{min-height:260px;resize:vertical}.mood{width:48px;height:48px;border:1px solid var(--border);background:var(--surface);border-radius:14px;font-size:1.4rem;transition:.2s}
+    .mood:hover,.mood.active{transform:translateY(-3px);border-color:var(--primary);box-shadow:0 7px 20px rgba(108,99,255,.15)}
+    .resource-card{display:block;padding:22px;color:var(--text);height:100%;transition:.25s}.resource-card:hover{transform:translateY(-6px);color:var(--text);border-color:rgba(108,99,255,.3)}
+    .resource-icon{width:50px;height:50px;display:grid;place-items:center;border-radius:15px;background:rgba(108,99,255,.1);color:var(--primary);font-size:1.4rem;margin-bottom:18px}
+    .resource-card h5{font-weight:700}.resource-card p{color:var(--muted);font-size:.9rem;margin:0}
+    .category-badge{display:inline-block;padding:6px 10px;border-radius:50px;font-size:.72rem;font-weight:600;background:var(--surface2);color:var(--muted);margin-bottom:15px}
+    .entry-card{padding:23px;margin-bottom:15px;transition:.2s}.entry-card:hover{transform:translateX(4px)}
+    .entry-date{color:var(--primary);font-size:.8rem;font-weight:600}.entry-preview{color:var(--muted);line-height:1.7;white-space:pre-wrap}
+    .code-box{background:#10151d;color:#cdd6e5;padding:22px;border-radius:16px;font-family:"JetBrains Mono",monospace;font-size:.85rem;overflow-x:auto}
+    .quick-action{padding:20px;text-align:center;color:var(--text);transition:.2s}.quick-action:hover{color:var(--primary);transform:translateY(-4px)}
+    .quick-action i{display:block;font-size:1.7rem;margin-bottom:9px} footer{border-top:1px solid var(--border);padding:35px 0;color:var(--muted)}
+    @media(max-width:768px){.hero{padding-top:80px}.hero-title{letter-spacing:-2px}.section{padding:55px 0}}
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container">
+    <a class="navbar-brand brand" href="#"><i class="bi bi-journal-code"></i> CodeJournal</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mx-auto gap-lg-2">
+        <li class="nav-item"><a class="nav-link" href="#journal">Journal</a></li>
+        <li class="nav-item"><a class="nav-link" href="#entries">Entries</a></li>
+        <li class="nav-item"><a class="nav-link" href="#coding">Coding Hub</a></li>
+        <li class="nav-item"><a class="nav-link" href="#tools">Tools</a></li>
+      </ul>
+      <button class="btn btn-soft" id="themeToggle"><i class="bi bi-moon-stars"></i></button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container position-relative">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <span class="category-badge"><i class="bi bi-stars"></i> YOUR DIGITAL DEVELOPER SPACE</span>
+        <h1 class="hero-title mt-3">Think. <span class="gradient-text">Build.</span> Reflect.</h1>
+        <p class="hero-description mt-4">A modern journal designed for people who code. Write down your thoughts, document projects, track your progress and jump directly into the tools you use every day.</p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="#journal" class="btn btn-primary-custom"><i class="bi bi-pencil-square me-2"></i>Start Journaling</a>
+          <a href="#coding" class="btn btn-soft"><i class="bi bi-code-slash me-2"></i>Explore Coding Hub</a>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="glass-card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div><small class="text-secondary">TODAY</small><h4 class="fw-bold mb-0" id="todayDate"></h4></div>
+            <span style="font-size:2rem">🧠</span>
+          </div>
+          <div class="row g-3">
+            <div class="col-6"><div class="glass-card stats-card"><div class="stat-number" id="entryCount">0</div><div class="stat-label">Journal Entries</div></div></div>
+            <div class="col-6"><div class="glass-card stats-card"><div class="stat-number">∞</div><div class="stat-label">Ideas</div></div></div>
+            <div class="col-12"><div class="code-box"><span style="color:#7f8c9f">// today's reminder</span><br><span style="color:#c792ea">const</span> progress = <span style="color:#89ddff">"keep going"</span>;<br><br><span style="color:#c792ea">if</span> (stuck) {<br>&nbsp;&nbsp;learn();<br>&nbsp;&nbsp;experiment();<br>&nbsp;&nbsp;tryAgain();<br>}</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="journal">
+  <div class="container">
+    <div class="mb-5"><h2 class="section-title">Today's Journal</h2><p class="section-subtitle">Capture what you're thinking, learning, building or planning.</p></div>
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="glass-card journal-card">
+          <input id="journalTitle" class="form-control journal-input mb-3" placeholder="Give today's entry a title...">
+          <textarea id="journalContent" class="form-control journal-textarea mb-4" placeholder="Write whatever is on your mind..."></textarea>
+          <div class="mb-4">
+            <label class="fw-semibold mb-3 d-block">How are you feeling?</label>
+            <div class="d-flex gap-2 flex-wrap">
+              <button class="mood" data-mood="😀">😀</button><button class="mood" data-mood="😎">😎</button>
+              <button class="mood" data-mood="🤔">🤔</button><button class="mood" data-mood="😴">😴</button>
+              <button class="mood" data-mood="🔥">🔥</button><button class="mood" data-mood="💡">💡</button>
+            </div>
+          </div>
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <small class="text-secondary"><i class="bi bi-shield-check me-1"></i>Stored locally in your browser</small>
+            <button class="btn btn-primary-custom" id="saveEntry"><i class="bi bi-save me-2"></i>Save Entry</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="glass-card journal-card">
+          <h5 class="fw-bold mb-4">Quick Prompts</h5>
+          <div class="list-group">
+            <button class="list-group-item list-group-item-action border-0 bg-transparent text-start" onclick="usePrompt('What did I learn today?')">💡 What did I learn today?</button>
+            <button class="list-group-item list-group-item-action border-0 bg-transparent text-start" onclick="usePrompt('What am I currently building?')">🛠️ What am I currently building?</button>
+            <button class="list-group-item list-group-item-action border-0 bg-transparent text-start" onclick="usePrompt('What problem am I trying to solve?')">🧩 What problem am I solving?</button>
+            <button class="list-group-item list-group-item-action border-0 bg-transparent text-start" onclick="usePrompt('What should I improve tomorrow?')">🚀 What should I improve?</button>
+            <button class="list-group-item list-group-item-action border-0 bg-transparent text-start" onclick="usePrompt('What am I grateful for today?')">🌱 What am I grateful for?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="entries">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-5">
+      <div><h2 class="section-title mb-2">Your Entries</h2><p class="section-subtitle mb-0">Search through your thoughts and progress.</p></div>
+      <div style="min-width:280px"><div class="input-group"><span class="input-group-text search-input border-0"><i class="bi bi-search"></i></span><input id="searchEntries" class="form-control search-input border-0" placeholder="Search entries..."></div></div>
+    </div>
+    <div id="entriesContainer"></div>
+  </div>
+</section>
+
+<section class="section" id="coding">
+  <div class="container">
+    <div class="mb-5">
+      <span class="category-badge"><i class="bi bi-terminal"></i> DEVELOPER TOOLKIT</span>
+      <h2 class="section-title mt-2">Coding Hub</h2>
+      <p class="section-subtitle">Everything you need to learn, build, debug and ship.</p>
+    </div>
+
+    <h5 class="fw-bold mb-3"><i class="bi bi-code-square me-2"></i>Development</h5>
+    <div class="row g-3 mb-5">
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://github.com" target="_blank"><div class="resource-icon"><i class="bi bi-github"></i></div><h5>GitHub</h5><p>Repositories, collaboration, issues and open source.</p></a></div>
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://stackoverflow.com" target="_blank"><div class="resource-icon"><i class="bi bi-stack-overflow"></i></div><h5>Stack Overflow</h5><p>Find answers to programming problems.</p></a></div>
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://developer.mozilla.org" target="_blank"><div class="resource-icon"><i class="bi bi-file-code"></i></div><h5>MDN Web Docs</h5><p>Web development documentation and references.</p></a></div>
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://codepen.io" target="_blank"><div class="resource-icon"><i class="bi bi-braces"></i></div><h5>CodePen</h5><p>Experiment with HTML, CSS and JavaScript.</p></a></div>
+    </div>
+
+    <h5 class="fw-bold mb-3"><i class="bi bi-mortarboard me-2"></i>Learn</h5>
+    <div class="row g-3 mb-5">
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://www.freecodecamp.org" target="_blank"><div class="resource-icon"><i class="bi bi-code-slash"></i></div><h5>freeCodeCamp</h5><p>Free programming lessons and certifications.</p></a></div>
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://www.w3schools.com" target="_blank"><div class="resource-icon"><i class="bi bi-globe2"></i></div><h5>W3Schools</h5><p>Tutorials and references for web technologies.</p></a></div>
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://roadmap.sh" target="_blank"><div class="resource-icon"><i class="bi bi-map"></i></div><h5>roadmap.sh</h5><p>Developer roadmaps and learning paths.</p></a></div>
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://leetcode.com" target="_blank"><div class="resource-icon"><i class="bi bi-lightning-charge"></i></div><h5>LeetCode</h5><p>Practice algorithms and coding problems.</p></a></div>
+    </div>
+
+    <h5 class="fw-bold mb-3"><i class="bi bi-tools me-2"></i>Tools & Platforms</h5>
+    <div class="row g-3">
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://code.visualstudio.com" target="_blank"><div class="resource-icon"><i class="bi bi-window"></i></div><h5>VS Code</h5><p>Popular code editor from Microsoft.</p></a></div>
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://www.npmjs.com" target="_blank"><div class="resource-icon"><i class="bi bi-box-seam"></i></div><h5>npm</h5><p>Discover JavaScript packages and libraries.</p></a></div>
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://www.netlify.com" target="_blank"><div class="resource-icon"><i class="bi bi-cloud-arrow-up"></i></div><h5>Netlify</h5><p>Deploy modern websites and web apps.</p></a></div>
+      <div class="col-md-6 col-lg-3"><a class="glass-card resource-card" href="https://vercel.com" target="_blank"><div class="resource-icon"><i class="bi bi-triangle"></i></div><h5>Vercel</h5><p>Build and deploy modern web applications.</p></a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tools">
+  <div class="container">
+    <div class="glass-card p-4 p-lg-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-5">
+          <span class="category-badge">PRODUCTIVITY</span>
+          <h2 class="section-title">Your developer shortcuts.</h2>
+          <p class="section-subtitle">Keep your frequently used resources only one click away.</p>
+        </div>
+        <div class="col-lg-7">
+          <div class="row g-2">
+            <div class="col-4"><a class="glass-card quick-action d-block" href="https://github.com" target="_blank"><i class="bi bi-github"></i>GitHub</a></div>
+            <div class="col-4"><a class="glass-card quick-action d-block" href="https://stackoverflow.com" target="_blank"><i class="bi bi-stack-overflow"></i>Answers</a></div>
+            <div class="col-4"><a class="glass-card quick-action d-block" href="https://developer.mozilla.org" target="_blank"><i class="bi bi-book"></i>Docs</a></div>
+            <div class="col-4"><a class="glass-card quick-action d-block" href="https://regex101.com" target="_blank"><i class="bi bi-regex"></i>Regex</a></div>
+            <div class="col-4"><a class="glass-card quick-action d-block" href="https://jsonformatter.org" target="_blank"><i class="bi bi-braces"></i>JSON</a></div>
+            <div class="col-4"><a class="glass-card quick-action d-block" href="https://caniuse.com" target="_blank"><i class="bi bi-browser-chrome"></i>Can I Use</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-6"><strong><i class="bi bi-journal-code me-2"></i>CodeJournal</strong><span class="ms-2">Think. Build. Reflect.</span></div>
+      <div class="col-md-6 text-md-end mt-3 mt-md-0">Built with Bootstrap & ❤️</div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-4">
+  <div id="saveToast" class="toast" role="alert">
+    <div class="toast-header"><i class="bi bi-check-circle-fill text-success me-2"></i><strong class="me-auto">CodeJournal</strong><button type="button" class="btn-close" data-bs-dismiss="toast"></button></div>
+    <div class="toast-body">Your journal entry has been saved.</div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const today = new Date();
+  document.getElementById("todayDate").textContent = today.toLocaleDateString("en-US",{month:"short",day:"numeric"});
+
+  const themeToggle = document.getElementById("themeToggle");
+  if (localStorage.getItem("codejournal-theme") === "dark") {
+    document.body.classList.add("dark");
+    themeToggle.innerHTML = '<i class="bi bi-sun"></i>';
+  }
+  themeToggle.addEventListener("click",()=>{
+    document.body.classList.toggle("dark");
+    const dark=document.body.classList.contains("dark");
+    localStorage.setItem("codejournal-theme",dark?"dark":"light");
+    themeToggle.innerHTML=dark?'<i class="bi bi-sun"></i>':'<i class="bi bi-moon-stars"></i>';
+  });
+
+  let selectedMood="";
+  document.querySelectorAll(".mood").forEach(button=>{
+    button.addEventListener("click",()=>{
+      document.querySelectorAll(".mood").forEach(btn=>btn.classList.remove("active"));
+      button.classList.add("active");
+      selectedMood=button.dataset.mood;
+    });
+  });
+
+  function getEntries(){return JSON.parse(localStorage.getItem("codejournal-entries")||"[]")}
+  function saveEntries(entries){localStorage.setItem("codejournal-entries",JSON.stringify(entries))}
+
+  function escapeHtml(text){
+    const div=document.createElement("div");
+    div.textContent=text;
+    return div.innerHTML;
+  }
+
+  function renderEntries(search=""){
+    const container=document.getElementById("entriesContainer");
+    const entries=getEntries();
+    const filtered=entries.filter(entry=>`${entry.title} ${entry.content}`.toLowerCase().includes(search.toLowerCase()));
+    document.getElementById("entryCount").textContent=entries.length;
+
+    if(!filtered.length){
+      container.innerHTML=`<div class="glass-card entry-card text-center py-5"><div style="font-size:3rem">📭</div><h5 class="fw-bold mt-3">No entries found</h5><p class="text-secondary">Try another search or write a new entry.</p></div>`;
+      return;
+    }
+
+    container.innerHTML=filtered.map(entry=>`
+      <div class="glass-card entry-card">
+        <div class="d-flex justify-content-between gap-3">
+          <div>
+            <div class="entry-date">${escapeHtml(entry.date)}</div>
+            <h5 class="fw-bold mt-2">${escapeHtml(entry.title)}</h5>
+            <p class="entry-preview mb-2">${escapeHtml(entry.content)}</p>
+            ${entry.mood?`<span class="badge rounded-pill text-bg-light">${entry.mood}</span>`:""}
+          </div>
+          <button class="btn btn-sm btn-outline-danger align-self-start" onclick="deleteEntryById('${entry.id}')"><i class="bi bi-trash"></i></button>
+        </div>
+      </div>`).join("");
+  }
+
+  document.getElementById("saveEntry").addEventListener("click",()=>{
+    const title=document.getElementById("journalTitle").value.trim();
+    const content=document.getElementById("journalContent").value.trim();
+    if(!title||!content){alert("Please enter a title and some content.");return}
+
+    const entries=getEntries();
+    entries.unshift({
+      id:Date.now().toString(),
+      title,content,mood:selectedMood,
+      date:new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})
+    });
+    saveEntries(entries);
+
+    document.getElementById("journalTitle").value="";
+    document.getElementById("journalContent").value="";
+    selectedMood="";
+    document.querySelectorAll(".mood").forEach(btn=>btn.classList.remove("active"));
+    renderEntries();
+
+    new bootstrap.Toast(document.getElementById("saveToast")).show();
+  });
+
+  function deleteEntryById(id){
+    saveEntries(getEntries().filter(entry=>entry.id!==id));
+    renderEntries(document.getElementById("searchEntries").value);
+  }
+
+  document.getElementById("searchEntries").addEventListener("input",e=>renderEntries(e.target.value));
+
+  function usePrompt(prompt){
+    const textarea=document.getElementById("journalContent");
+    textarea.value=prompt+"\n\n";
+    textarea.focus();
+  }
+
+  renderEntries();
+</script>
+</body>
+</html>
